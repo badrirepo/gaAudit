@@ -35,8 +35,8 @@ gaCheck <- function(url){
     } else {
       ga <- 'None'
     }
-	  
-  return(list(ga=ga,tm=tm))
+  df <- data.frame(ga=ga,tm=tm)
+  return(df)
 }
 
 # Boolean operation
@@ -53,16 +53,21 @@ sitemap <-"http://www.agilej.com/sitemap.xml"
 
 #### Get the URLs from sitemap ####
 urls <- getUrls(sitemap)
-result <- lapply(urls,gaCheck)
-AnalyticsType<-as.character()
-GoogleTagManager <- as.character()
 
 #### Report Generation ####
- for (i in 1:length(result))
- {
-	AnalyticsType[i]<- result[[i]]$ga
-	GoogleTagManager[i]<- result[[i]]$tm
- }
- 
-report <- data.frame( data.frame(GoogleAnalytics = unlist(lapply(AnalyticsType,ga))),AnalyticsType=unlist(AnalyticsType),GoogleTagManager=unlist(GoogleTagManager))
-report<- cbind(urls,report)
+
+# Get the Analytics type and GTM existence
+result <- lapply(urls,gaCheck)
+report <- do.call(rbind,result)
+colnames(report) <- c("AnalyticsType","GoogleTagManager")
+
+# Check the existence of Google Analytics
+gaType <- data.frame(
+  GoogleAnalytics=unlist(
+    (lapply(report[,"AnalyticsType"],ga)
+     )
+    )
+  )
+
+# Final Report
+report <- cbind(urls,gaType,report)
