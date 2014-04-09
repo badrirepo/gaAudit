@@ -56,6 +56,7 @@ urls <- getUrls(sitemap)
 result <- lapply(urls,gaCheck)
 AnalyticsType<-as.character()
 GoogleTagManager <- as.character()
+
 #### Report Generation ####
  for (i in 1:length(result))
  {
