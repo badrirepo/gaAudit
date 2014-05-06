@@ -72,3 +72,7 @@ gaType <- data.frame(
 # Final Report
 report <- cbind(urls,gaType,report)
 write.csv(report,"GATM.csv",row.names=F)
+
+# Check everything is OK
+xtabs(~GoogleAnalytics+AnalyticsType, data= report)
+xtabs(~GoogleAnalytics+GoogleTagManager, data= report)
